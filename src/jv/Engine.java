@@ -1,17 +1,15 @@
 package jv;
 
-import jv.move.Move;
-
 import java.util.ArrayList;
 
 public class Engine {
 
-    public static double INFINITY = 32000;
+    private static double INFINITY = 32000;
 
-    public int nodes;
-    public int init_depth;
-    public Move[][] pv;
-    public boolean endgame;
+    private int nodes;
+    private int init_depth;
+    private Move[][] pv;
+    private boolean endgame;
     private int[] pv_length;
     private int MAX_PLY;
 
@@ -37,8 +35,8 @@ public class Engine {
 
         int cpt = 1;
         for (Move m : mList) {
-            if (!b.domove(m.pos1, m.pos2, m.s)) continue;
-            System.out.println("move #" + cpt + ":" + b.caseInt2Str(m.pos1) + b.caseInt2Str(m.pos2) + m.s);
+            if (!b.domove(m.getDepart(), m.getArrivee(), m.getPromote())) continue;
+            System.out.println("move #" + cpt + ":" + b.caseInt2Str(m.getDepart()) + b.caseInt2Str(m.getArrivee()) + m.getPromote());
             b.undomove();
             cpt += 1;
         }
@@ -62,7 +60,7 @@ public class Engine {
         if (prof > limit) return 0;
         ArrayList<Move> L = b.gen_moves_list("", false);
         for (Move m : L) {
-            if (!b.domove(m.pos1, m.pos2, m.s))
+            if (!b.domove(m.getDepart(), m.getArrivee(), m.getPromote()))
                 continue;
             cpt += perftoption(prof + 1, limit, b);
             if (limit == prof)
@@ -77,7 +75,7 @@ public class Engine {
         endgame = false;
     }
 
-    public void usermove(Board b, String c, String depart, String arrivee) {
+    public void usermove(Board b, String c) {
 
         if (endgame) {
             print_result(b);
@@ -121,7 +119,7 @@ public class Engine {
         //boolean b1 = !mList.contains(m);
         boolean b1 = false;
         for (Move mv : mList) {
-            if (mv.pos1 == m.pos1 && mv.pos2 == m.pos2 && mv.s.equals(m.s)) {
+            if (mv.getDepart() == m.getDepart() && mv.getArrivee() == m.getArrivee() && mv.getPromote().equals(m.getPromote())) {
                 b1 = true;
                 break;
             }
@@ -142,13 +140,13 @@ public class Engine {
 
     }
 
-    public void print_result(Board b) {
+    private void print_result(Board b) {
 
         // Is there at least one legal move left ?
         boolean f = false;
 
         for (Move m : b.gen_moves_list("", false)) {
-            if (b.domove(m.pos1, m.pos2, m.s)) {
+            if (b.domove(m.getDepart(), m.getArrivee(), m.getPromote())) {
                 b.undomove();
                 f = true;  //yes, a move can be done
                 break;
@@ -199,7 +197,7 @@ public class Engine {
 
     }
 
-    public void clear_pv() {
+    private void clear_pv() {
         for (int x = 0; x < MAX_PLY; x++)
             for (int y = 0; y < MAX_PLY; y++)
                 pv[x][y] = null;
@@ -227,9 +225,9 @@ public class Engine {
             int j = 0;
             while (pv[j][j] != null) {
                 Move c = pv[j][j];
-                String pos1 = b.caseInt2Str(c.pos1);
-                String pos2 = b.caseInt2Str(c.pos2);
-                System.out.print(pos1 + "" + pos2 + c.s + " ");
+                String pos1 = b.caseInt2Str(c.getDepart());
+                String pos2 = b.caseInt2Str(c.getArrivee());
+                System.out.print(pos1 + "" + pos2 + c.getPromote() + " ");
                 j += 1;
             }
 
@@ -240,11 +238,11 @@ public class Engine {
         }
         // root best move found, do it, and print result
         Move best = pv[0][0];
-        b.domove(best.pos1, best.pos2, best.s);
+        b.domove(best.getDepart(), best.getArrivee(), best.getPromote());
         print_result(b);
     }
 
-    public double alphabeta(int depth, double alpha, double beta, Board b) {
+    private double alphabeta(int depth, double alpha, double beta, Board b) {
 
         // We arrived at the end of the search : return the board score
         if (depth == 0)
@@ -274,7 +272,7 @@ public class Engine {
         boolean f = false;  // flag to know if at least one move will be done
         //for i, m in enumerate(mList)
         for (Move m : mList) {
-            if (!b.domove(m.pos1, m.pos2, m.s))
+            if (!b.domove(m.getDepart(), m.getArrivee(), m.getPromote()))
                 continue;
             f = true;  // a move has passed
             double score = -alphabeta(depth - 1, -beta, -alpha, b);

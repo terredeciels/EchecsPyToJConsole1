@@ -31,7 +31,7 @@ public class Main {
 
             else
                 // coup à jouer ? ex : e2e4
-                e.usermove(b, c, "", "");
+                e.usermove(b, c);
         }
     }
 

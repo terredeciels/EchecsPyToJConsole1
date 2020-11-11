@@ -1,23 +1,27 @@
-package jv.move;
+package jv;
 
-import jv.Piece;
+class Move {
+    private int depart;
+    private int arrivee;
+    private String promote;
+    private int histEp;
+    private Piece piecePrise;
+    private boolean hist_roque_56;
+    private boolean hist_roque_63;
+    private boolean isEp;
+    private boolean hist_roque_0;
+    private boolean hist_roque_7;
 
-public class MoveHistory {
-    private final int depart;
-    private final int arrivee;
-    private final String promote;
-    private final int histEp;
-    private final Piece piecePrise;
-    private final boolean hist_roque_56;
-    private final boolean hist_roque_63;
-    private final boolean isEp;
-    private final boolean hist_roque_0;
-    private final boolean hist_roque_7;
     // ?? private final Piece pieceDeplacee;
+    Move(int depart, int arrivee, String s) {
+        this.depart = depart;
+        this.arrivee = arrivee;
+        this.promote = s;
+    }
 
-    public MoveHistory(int depart, int arrivee, Piece piecePrise,
-                       boolean isEp, int histEp, String promote,
-                       boolean hist_roque_56, boolean hist_roque_63, boolean hist_roque_0, boolean hist_roque_7) {
+    Move(int depart, int arrivee, Piece piecePrise,
+         boolean isEp, int histEp, String promote,
+         boolean hist_roque_56, boolean hist_roque_63, boolean hist_roque_0, boolean hist_roque_7) {
         this.depart = depart;
         this.arrivee = arrivee;
         // ?? this.pieceDeplacee = pieceDeplacee;

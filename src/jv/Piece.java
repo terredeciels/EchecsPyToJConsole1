@@ -1,10 +1,8 @@
 package jv;
 
-import jv.move.Move;
-
 import java.util.ArrayList;
 
-public class Piece {
+class Piece {
     private final String VIDE = "."; // empty piece name (=empty square '.' in console)
     String nom;
     String couleur;

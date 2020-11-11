@@ -1,15 +1,12 @@
 package jv;
 
 
-import jv.move.Move;
-import jv.move.MoveHistory;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Board {
 
-    public int ply;
+    int ply;
     Piece[] cases;
     boolean white_can_castle_63;
     boolean white_can_castle_56;
@@ -17,7 +14,7 @@ public class Board {
     boolean black_can_castle_0;
     int ep;
     String side2move;
-    private ArrayList<MoveHistory> history;
+    private ArrayList<Move> history;
     private String[] coord = {
 
             "a8", "b8", "c8", "d8", "e8", "f8", "g8", "h8",
@@ -65,30 +62,21 @@ public class Board {
     }
 
     String oppColor(String c) {
-        // "Returns the opposite color of the "c" color given"
-
-        if (c.equals("blanc"))
-            return "noir";
-        else
-            return "blanc";
+       return c.equals("blanc") ? "noir" : "blanc";
     }
 
     boolean is_attacked(int pos, String couleur) {
-//        """Returns TRUE or FALSE if the square number "pos" is a
-//        destination square for the color "couleur".
-//        If so we can say that "pos" is attacked by this side.
-//        This function is used for "in check" and for castle moves."""
 
         ArrayList<Move> mList = gen_moves_list(couleur, true);
 
         for (Move m : mList) {
-            if (m.pos2 == pos)
+            if (m.getArrivee() == pos)
                 return true;
         }
         return false;
     }
 
-    public ArrayList<Move> gen_moves_list(String color, boolean dontCallIsAttacked) {
+    ArrayList<Move> gen_moves_list(String color, boolean dontCallIsAttacked) {
 
 //        """Returns all possible moves for the requested color.
 //        If color is not given, it is considered as the side to move.
@@ -142,7 +130,7 @@ public class Board {
         return (x >> 3);
     }
 
-    public boolean domove(int depart, int arrivee, String promote) {
+    boolean domove(int depart, int arrivee, String promote) {
 
         // Informations to save in the history moves
         Piece pieceDeplacee = cases[depart]; // moved piece
@@ -281,7 +269,7 @@ public class Board {
 
         // Save move to the history list
 
-        history.add(new MoveHistory(depart, arrivee, piecePrise, isEp, histEp, promote,
+        history.add(new Move(depart, arrivee, piecePrise, isEp, histEp, promote,
                 hist_roque_56, hist_roque_63, hist_roque_0, hist_roque_7));
 
         // If the move lets king in check, undo it and return false
@@ -323,7 +311,7 @@ public class Board {
             return;
         }
 
-        MoveHistory lastmove = history.get(history.size() - 1); // ??
+        Move lastmove = history.get(history.size() - 1); // ??
 
         int pos1 = lastmove.getDepart();
         int pos2 = lastmove.getArrivee();
@@ -403,7 +391,7 @@ public class Board {
 
     }
 
-    public String caseInt2Str(int i) {
+    String caseInt2Str(int i) {
 
         String err =
                 "Square number must be in 0 to 63";
@@ -513,7 +501,7 @@ public class Board {
             System.out.print("-");
             System.out.println();
         }
-System.out.println();
+        System.out.println();
         //Displaying moves done from the history
         showHistory();
     }
@@ -523,7 +511,7 @@ System.out.println();
         if (history.size() == 0)
             return;
         String a, b;
-        for (MoveHistory h : history) {
+        for (Move h : history) {
             final int depart = h.getDepart();
             a = caseInt2Str(depart);
             final int arrivee = h.getArrivee();

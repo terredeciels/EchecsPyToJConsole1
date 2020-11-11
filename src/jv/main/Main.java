@@ -6,7 +6,10 @@ import jv.Engine;
 import java.util.Scanner;
 
 public class Main {
-
+//1	20
+//        2	400
+//        3	8902
+//        4	197281
     public static void main(String[] args) {
         Board b = new Board();
         Engine e = new Engine();

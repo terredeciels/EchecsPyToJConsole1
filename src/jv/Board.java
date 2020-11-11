@@ -78,18 +78,6 @@ public class Board {
 
     ArrayList<Move> gen_moves_list(String color, boolean dontCallIsAttacked) {
 
-//        """Returns all possible moves for the requested color.
-//        If color is not given, it is considered as the side to move.
-//        dontCallIsAttacked is a boolean flag to avoid recursive calls,
-//        due to the actually wrotten is_attacked() function calling
-//        this gen_moves_list() function.
-//        A move is defined as it :
-//        - the number of the starting square (pos1)
-//        - the number of the destination square (pos2)
-//        - the name of the piece to promote "","q","r","b","n"
-//          (queen, rook, bishop, knight)
-//        """
-
 
         if (color.equals("")) color = side2move;
         ArrayList<Move> mList = new ArrayList<>();
@@ -103,24 +91,24 @@ public class Board {
 
             switch (piece.nom) {
                 case "ROI":  //#KING
-                    mList.addAll(piece.pos2_roi(pos1, oppColor(color), this, dontCallIsAttacked));
+                    mList.addAll(piece.roi.pos2(pos1, oppColor(color), this, dontCallIsAttacked));
                     continue;
                 case "DAME": // QUEEN = ROOK + BISHOP moves !
-                    mList.addAll(piece.pos2_tour(pos1, oppColor(color), this));
-                    mList.addAll(piece.pos2_fou(pos1, oppColor(color), this));
+                    mList.addAll(piece.tour.pos2(pos1, oppColor(color), this,false));
+                    mList.addAll(piece.fou.pos2(pos1, oppColor(color), this,false));
                     continue;
                 case "TOUR":  // ROOK
-                    mList.addAll(piece.pos2_tour(pos1, oppColor(color), this));
+                    mList.addAll(piece.tour.pos2(pos1, oppColor(color), this,false));
                     continue;
                 case "CAVALIER":  // KNIGHT
-                    mList.addAll(piece.pos2_cavalier(pos1, oppColor(color), this));
+                    mList.addAll(piece.cavalier.pos2(pos1, oppColor(color), this,false));
                     continue;
                 case "FOU":  // BISHOP
-                    mList.addAll(piece.pos2_fou(pos1, oppColor(color), this));
+                    mList.addAll(piece.fou.pos2(pos1, oppColor(color), this,false));
                     continue;
             }
             if (piece.nom.equals("PION")) { // PAWN
-                mList.addAll(piece.pos2_pion(pos1, piece.couleur, this));
+                mList.addAll(piece.pion.pos2(pos1, piece.couleur, this,false));
             }
         }
         return mList;
